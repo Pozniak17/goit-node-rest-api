@@ -7,6 +7,8 @@ import {
   updateContact,
 } from "../controllers/contactsControllers.js";
 
+//! тут всі маршрути, що стосуються книг
+
 const contactsRouter = express.Router();
 
 contactsRouter.get("/", getAllContacts);

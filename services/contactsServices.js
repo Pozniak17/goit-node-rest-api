@@ -1,8 +1,8 @@
-const fs = require("node:fs/promises");
-const path = require("node:path");
-const crypto = require("node:crypto");
+import fs from "node:fs/promises";
+import path from "node:path";
+import crypto from "node:crypto";
 
-const contactsPath = path.join(__dirname, "db", "contacts.json");
+const contactsPath = path.resolve("db", "contacts.json");
 
 async function listContacts() {
   // ...твій код. Повертає масив контактів.
@@ -43,7 +43,7 @@ async function addContact(name, email, phone) {
   return newContact;
 }
 
-module.exports = {
+export default {
   listContacts,
   getContactById,
   removeContact,
