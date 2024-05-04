@@ -43,7 +43,7 @@ async function addContact(name, email, phone) {
   return newContact;
 }
 
-async function updateContact(id, data) {
+async function rewriteContact(id, data) {
   const contacts = await listContacts();
   const index = contacts.findIndex((item) => item.id === contactId);
   if (index === -1) {
@@ -59,5 +59,5 @@ export default {
   getContactById,
   removeContact,
   addContact,
-  updateContact,
+  rewriteContact,
 };
