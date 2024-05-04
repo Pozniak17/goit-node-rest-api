@@ -1,37 +1,39 @@
 import contactsService from "../services/contactsServices.js";
+import HttpError from "../helpers/HttpError.js";
 
-export const getAllContacts = async (req, res) => {
+export const getAllContacts = async (req, res, next) => {
   try {
     const result = await contactsService.listContacts();
     res.json(result);
   } catch (error) {
-    res.status(500).json({
-      message: "Server error",
-    });
+    next(error);
   }
 };
 
-export const getOneContact = async (req, res) => {
+export const getOneContact = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await contactsService.getContactById(id);
     if (!result) {
-      return res.status(404).json({
-        message: "Not found",
-      });
+      throw HttpError(404);
     }
+
     res.json(result);
   } catch (error) {
-    res.status(500).json({
-      message: "Server error",
-    });
+    next(error);
   }
 };
 
-// продовжити 20:00
+export const createContact = async (req, res, next) => {
+  const { name, email, phone } = req.body;
+  try {
+    const result = await contactsService.addContact(name, email, phone);
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const deleteContact = (req, res) => {};
-
-export const createContact = (req, res) => {};
 
 export const updateContact = (req, res) => {};
