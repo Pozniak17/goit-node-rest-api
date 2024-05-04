@@ -43,15 +43,16 @@ export const createContact = async (req, res, next) => {
 };
 
 export const updateContact = async (req, res, next) => {
-  const { id } = req.params;
   const { name, email, phone } = req.body;
+  const { error } = updateContactSchema.validate({ name, email, phone });
   try {
-    const { error } = updateContactSchema.validate({ name, email, phone });
     if (error) {
       throw HttpError(400, error.message);
     }
 
-    const result = await contactsService.updateById(id, req.body);
+    const { id } = req.params;
+    const result = await contactsService.updateContact(id, req.body);
+
     if (!result) {
       throw HttpError(404);
     }
@@ -61,4 +62,27 @@ export const updateContact = async (req, res, next) => {
   }
 };
 
-export const deleteContact = (req, res) => {};
+export const deleteContact = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await contactsService.removeContact(id);
+
+    if (!result) {
+      throw HttpError(404);
+    }
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// export async function deletedContact(req, res) {
+//   const { id } = req.params;
+//   const deletedContact = await removeContact(id);
+//   if (deletedContact) {
+//     res.status(200).json(deletedContact);
+//   } else {
+//     res.status(404).json({ message: "Not found" });
+//   }
+// }
