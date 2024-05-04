@@ -1,5 +1,9 @@
 import contactsService from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
+import {
+  createContactSchema,
+  updateContactSchema,
+} from "../schemas/contactsSchemas.js";
 
 export const getAllContacts = async (req, res, next) => {
   try {
@@ -27,6 +31,10 @@ export const getOneContact = async (req, res, next) => {
 export const createContact = async (req, res, next) => {
   const { name, email, phone } = req.body;
   try {
+    const { error } = createContactSchema.validate({ name, email, phone });
+    if (error) {
+      throw HttpError(400, error.message);
+    }
     const result = await contactsService.addContact(name, email, phone);
     res.status(201).json(result);
   } catch (error) {
@@ -34,6 +42,23 @@ export const createContact = async (req, res, next) => {
   }
 };
 
-export const deleteContact = (req, res) => {};
+export const updateContact = async (req, res, next) => {
+  const { id } = req.params;
+  const { name, email, phone } = req.body;
+  try {
+    const { error } = updateContactSchema.validate({ name, email, phone });
+    if (error) {
+      throw HttpError(400, error.message);
+    }
 
-export const updateContact = (req, res) => {};
+    const result = await contactsService.updateById(id, req.body);
+    if (!result) {
+      throw HttpError(404);
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteContact = (req, res) => {};
