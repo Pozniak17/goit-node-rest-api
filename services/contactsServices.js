@@ -49,9 +49,10 @@ async function rewriteContact(id, data) {
   if (index === -1) {
     return null;
   }
-  contacts[index] = { id, ...data };
+  const updatedContact = { ...contacts[index], ...data };
+  contacts[index] = updatedContact;
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-  return contacts[index];
+  return updatedContact;
 }
 
 export default {
