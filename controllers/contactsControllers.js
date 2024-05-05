@@ -43,20 +43,16 @@ export const createContact = async (req, res, next) => {
 };
 
 export const updateContact = async (req, res, next) => {
-  const { name, email, phone } = req.body;
-  const { error } = updateContactSchema.validate({ name, email, phone });
   try {
-    if (error) {
-      throw HttpError(400, error.message);
-    }
+    if (Object.keys(req.body).length === 0)
+      throw HttpError(400, "Body must have at least one field");
 
     const { id } = req.params;
-    const result = await contactsService.rewriteContact(id, req.body);
+    const contact = await contactsService.rewriteContact(id, req.body);
 
-    if (!result) {
-      throw HttpError(404);
-    }
-    res.json(result);
+    if (!contact) throw HttpError(404);
+
+    res.json(contact);
   } catch (error) {
     next(error);
   }
