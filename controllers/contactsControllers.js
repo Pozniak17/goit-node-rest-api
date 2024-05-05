@@ -43,19 +43,52 @@ export const createContact = async (req, res, next) => {
 };
 
 export const updateContact = async (req, res, next) => {
+  const { name, email, phone } = req.body;
+  const { error } = updateContactSchema.validate({ name, email, phone });
   try {
-    if (Object.keys(req.body).length === 0)
-      throw HttpError(400, "Body must have at least one field");
+    if (Object.keys(req.body).length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Body must have at least one field" });
+    }
+    if (error) {
+      throw HttpError(400, error.message);
+    }
 
     const { id } = req.params;
-    const contact = await contactsService.rewriteContact(id, req.body);
+    const result = await contactsService.rewriteContact(id, req.body);
 
-    if (!contact) throw HttpError(404);
-
-    res.json(contact);
+    if (!result) {
+      throw HttpError(404);
+    }
+    res.json(result);
   } catch (error) {
     next(error);
   }
+
+  // const { id } = req.params;
+  // const { name, email, phone } = req.body;
+  // const { error } = updateContactSchema.validate({ name, email, phone });
+
+  // if (Object.keys(req.body).length === 0) {
+  //   return res
+  //     .status(400)
+  //     .json({ message: "Body must have at least one field" });
+  // }
+  // if (error) {
+  //   return res.status(400).json({ message: error.message });
+  // }
+
+  // try {
+  //   const result = await contactsService.rewriteContact(id, req.body);
+  //   if (!result) {
+  //     return res.status(404).json({ message: "Not found" });
+  //   }
+
+  //   res.status(200).json(result);
+  // } catch (error) {
+  //   next(error);
+  // }
 };
 
 export const deleteContact = async (req, res, next) => {
