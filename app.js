@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import { DB_HOST } from "./config.js";
+const { DB_HOST } = process.env;
 
 // GhnZuIMOS4l1vs3j;
 
