@@ -1,10 +1,16 @@
+import mongoose from "mongoose";
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import { DB_HOST } from "./config.js";
+
+// GhnZuIMOS4l1vs3j;
 
 import contactsRouter from "./routes/contactsRouter.js";
 
 export const app = express();
+
+mongoose.set("strictQuery", true);
 
 app.use(morgan("tiny"));
 app.use(cors());
@@ -20,3 +26,15 @@ app.use((err, req, res, next) => {
   const { status = 500, message = "Server error" } = err;
   res.status(status).json({ message });
 });
+
+mongoose
+  .connect(DB_HOST)
+  .then(() =>
+    app.listen(3000, () => {
+      console.log("Database connection successful");
+    })
+  )
+  .catch((error) => {
+    console.log(error.message);
+    process.exit(1);
+  });
