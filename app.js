@@ -2,15 +2,14 @@ import mongoose from "mongoose";
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-const { DB_HOST } = process.env;
-
-// GhnZuIMOS4l1vs3j;
-
+import "dotenv/config";
 import contactsRouter from "./routes/contactsRouter.js";
 
-export const app = express();
+const { PORT = 3000 } = process.env;
 
-mongoose.set("strictQuery", true);
+const DB_URI = process.env.DB_URI;
+
+const app = express();
 
 app.use(morgan("tiny"));
 app.use(cors());
@@ -28,9 +27,9 @@ app.use((err, req, res, next) => {
 });
 
 mongoose
-  .connect(DB_HOST)
+  .connect(DB_URI)
   .then(() =>
-    app.listen(3000, () => {
+    app.listen(PORT, () => {
       console.log("Database connection successful");
     })
   )
