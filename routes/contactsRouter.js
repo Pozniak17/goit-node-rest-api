@@ -1,10 +1,10 @@
 import express from "express";
 import {
   getAllContacts,
-  getOneContact,
-  deleteContact,
-  createContact,
-  updateContact,
+  // getOneContact,
+  // deleteContact,
+  // createContact,
+  // updateContact,
 } from "../controllers/contactsControllers.js";
 
 //! тут всі маршрути, що стосуються книг
@@ -18,7 +18,7 @@ contactsRouter.get("/", getAllContacts);
 
 // contactsRouter.delete("/:id", deleteContact);
 
-contactsRouter.post("/", createContact);
+// contactsRouter.post("/", createContact);
 
 // contactsRouter.put("/:id", updateContact);
 
