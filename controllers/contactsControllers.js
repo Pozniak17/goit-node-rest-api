@@ -29,19 +29,19 @@ export const getAllContacts = async (req, res, next) => {
 //   }
 // };
 
-// export const createContact = async (req, res, next) => {
-//   const { name, email, phone } = req.body;
-//   try {
-//     const { error } = createContactSchema.validate({ name, email, phone });
-//     if (error) {
-//       throw HttpError(400, error.message);
-//     }
-//     const result = await Contact.create(name, email, phone);
-//     res.status(201).json(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+export const createContact = async (req, res, next) => {
+  const { name, email, phone } = req.body;
+  try {
+    const { error } = createContactSchema.validate({ name, email, phone });
+    if (error) {
+      throw HttpError(400, error.message);
+    }
+    const result = await Contact.create({ name, email, phone });
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 // export const updateContact = async (req, res, next) => {
 //   const { name, email, phone } = req.body;

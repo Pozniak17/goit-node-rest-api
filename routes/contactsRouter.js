@@ -3,7 +3,7 @@ import {
   getAllContacts,
   // getOneContact,
   // deleteContact,
-  // createContact,
+  createContact,
   // updateContact,
 } from "../controllers/contactsControllers.js";
 
@@ -18,7 +18,7 @@ contactsRouter.get("/", getAllContacts);
 
 // contactsRouter.delete("/:id", deleteContact);
 
-// contactsRouter.post("/", createContact);
+contactsRouter.post("/", createContact);
 
 // contactsRouter.put("/:id", updateContact);
 
