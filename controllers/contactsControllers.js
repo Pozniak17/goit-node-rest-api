@@ -15,19 +15,19 @@ export const getAllContacts = async (req, res, next) => {
   }
 };
 
-// export const getOneContact = async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     const result = await contactsService.getContactById(id);
-//     if (!result) {
-//       throw HttpError(404);
-//     }
+export const getOneContact = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await Contact.findById(id);
+    if (!result) {
+      throw HttpError(404);
+    }
 
-//     res.json(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const createContact = async (req, res, next) => {
   const { name, email, phone } = req.body;

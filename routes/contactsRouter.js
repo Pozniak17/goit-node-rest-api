@@ -1,7 +1,8 @@
 import express from "express";
+// import isValidId from "../controllers/middlewares/isValidId.js";
 import {
   getAllContacts,
-  // getOneContact,
+  getOneContact,
   // deleteContact,
   createContact,
   // updateContact,
@@ -14,7 +15,7 @@ const contactsRouter = express.Router();
 //* коментуємо
 contactsRouter.get("/", getAllContacts);
 
-// contactsRouter.get("/:id", getOneContact);
+contactsRouter.get("/:id", getOneContact);
 
 // contactsRouter.delete("/:id", deleteContact);
 
