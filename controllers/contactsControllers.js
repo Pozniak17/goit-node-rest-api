@@ -43,35 +43,55 @@ export const createContact = async (req, res, next) => {
   }
 };
 
-// export const updateContact = async (req, res, next) => {
-//   const { name, email, phone } = req.body;
-//   const { error } = updateContactSchema.validate({ name, email, phone });
-//   try {
-//     if (error) {
-//       throw HttpError(400, error.message);
-//     }
+export const updateContact = async (req, res, next) => {
+  const { name, email, phone } = req.body;
+  const { error } = updateContactSchema.validate({ name, email, phone });
+  try {
+    if (error) {
+      throw HttpError(400, error.message);
+    }
 
-//     const { id } = req.params;
-//     const result = await contactsService.rewriteContact(id, req.body);
+    const { id } = req.params;
+    const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
 
-//     if (!result) {
-//       throw HttpError(404);
-//     }
-//     res.json(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    if (!result) {
+      throw HttpError(404);
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
-// export const deleteContact = async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     const result = await contactsService.removeContact(id);
-//     if (!result) {
-//       throw HttpError(404);
-//     }
-//     res.json(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+export const updateStatusContact = async (req, res, next) => {
+  const { name, email, phone } = req.body;
+  const { error } = updateContactSchema.validate({ name, email, phone });
+  try {
+    if (error) {
+      throw HttpError(400, error.message);
+    }
+
+    const { id } = req.params;
+    const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+
+    if (!result) {
+      throw HttpError(404);
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteContact = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await Contact.findByIdAndDelete(id);
+    if (!result) {
+      throw HttpError(404);
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
