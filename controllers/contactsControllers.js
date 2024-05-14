@@ -64,8 +64,6 @@ export const updateContact = async (req, res, next) => {
 };
 
 export const updateStatusContact = async (req, res, next) => {
-  const { name, email, phone } = req.body;
-  const { error } = updateContactSchema.validate({ name, email, phone });
   try {
     if (error) {
       throw HttpError(400, error.message);

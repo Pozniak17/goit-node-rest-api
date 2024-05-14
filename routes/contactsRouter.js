@@ -11,7 +11,7 @@ import {
 import validateBody from "../helpers/validateBody.js";
 import {
   createContactSchema,
-  updateContactSchema,
+  updateFavoriteSchema,
 } from "../schemas/contactsSchemas.js";
 
 //! тут всі маршрути, що стосуються книг
@@ -30,7 +30,7 @@ contactsRouter.put("/:id", validateBody(createContactSchema), updateContact);
 
 contactsRouter.patch(
   "/:id/favorite",
-  validateBody(updateContactSchema),
+  validateBody(updateFavoriteSchema),
   updateStatusContact
 );
 
