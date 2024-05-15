@@ -29,56 +29,29 @@ export const getOneContact = async (req, res, next) => {
   }
 };
 
-export const createContact = async (req, res, next) => {
-  const { name, email, phone } = req.body;
-  try {
-    const { error } = createContactSchema.validate({ name, email, phone });
-    if (error) {
-      throw HttpError(400, error.message);
-    }
-    const result = await Contact.create({ name, email, phone });
-    res.status(201).json(result);
-  } catch (error) {
-    next(error);
-  }
+export const createContact = async (req, res) => {
+  const result = await Contact.create(req.body);
+  res.status(201).json(result);
 };
 
 export const updateContact = async (req, res, next) => {
-  const { name, email, phone } = req.body;
-  const { error } = updateContactSchema.validate({ name, email, phone });
-  try {
-    if (error) {
-      throw HttpError(400, error.message);
-    }
+  const { id } = req.params;
+  const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
 
-    const { id } = req.params;
-    const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
-
-    if (!result) {
-      throw HttpError(404);
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
+  if (!result) {
+    throw HttpError(404);
   }
+  res.json(result);
 };
 
-export const updateStatusContact = async (req, res, next) => {
-  try {
-    if (error) {
-      throw HttpError(400, error.message);
-    }
+export const updateStatusContact = async (req, res) => {
+  const { id } = req.params;
+  const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
 
-    const { id } = req.params;
-    const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
-
-    if (!result) {
-      throw HttpError(404);
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
+  if (!result) {
+    throw HttpError(404);
   }
+  res.json(result);
 };
 
 export const deleteContact = async (req, res, next) => {
