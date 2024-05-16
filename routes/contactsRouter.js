@@ -1,11 +1,18 @@
 import express from "express";
+// import isValidId from "../controllers/middlewares/isValidId.js";
 import {
   getAllContacts,
   getOneContact,
   deleteContact,
   createContact,
   updateContact,
+  updateStatusContact,
 } from "../controllers/contactsControllers.js";
+import validateBody from "../helpers/validateBody.js";
+import {
+  createContactSchema,
+  updateFavoriteSchema,
+} from "../schemas/contactsSchemas.js";
 
 //! тут всі маршрути, що стосуються книг
 
@@ -17,8 +24,14 @@ contactsRouter.get("/:id", getOneContact);
 
 contactsRouter.delete("/:id", deleteContact);
 
-contactsRouter.post("/", createContact);
+contactsRouter.post("/", validateBody(createContactSchema), createContact);
 
-contactsRouter.put("/:id", updateContact);
+contactsRouter.put("/:id", validateBody(createContactSchema), updateContact);
+
+contactsRouter.patch(
+  "/:id/favorite",
+  validateBody(updateFavoriteSchema),
+  updateStatusContact
+);
 
 export default contactsRouter;
