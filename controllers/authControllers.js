@@ -1,20 +1,56 @@
+import bcrypt from "bcrypt";
 import User from "../models/users.js";
-// import bcrypt from "bcrypt";
 
 async function register(req, res, next) {
   const { name, email, password } = req.body;
+
+  const emailInLowerCase = email.toLowerCase();
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: emailInLowerCase });
 
     if (user !== null) {
       return res.status(409).send({ message: "User already registered" });
     }
 
-    const result = await User.create({ name, email, password });
+    const passwordHash = await bcrypt.hash(password, 10);
 
-    console.log({ result });
+    await User.create({
+      name,
+      email: emailInLowerCase,
+      password: passwordHash,
+    });
 
-    res.send("Register");
+    res.status(201).send({ message: "Registation succesfully" });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function login(req, res, next) {
+  const { email, password } = req.body;
+
+  const emailInLowerCase = email.toLowerCase();
+
+  try {
+    const user = await User.findOne({ email: emailInLowerCase });
+
+    if (user === null) {
+      console.log("Email");
+      return res
+        .status(401)
+        .send({ message: "Email or password is incorrect" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (isMatch === false) {
+      console.log("Password");
+      return res
+        .status(401)
+        .send({ message: "Email or password is incorrect" });
+    }
+
+    res.send("Login");
   } catch (error) {
     next(error);
   }
@@ -22,4 +58,5 @@ async function register(req, res, next) {
 
 export default {
   register,
+  login,
 };
