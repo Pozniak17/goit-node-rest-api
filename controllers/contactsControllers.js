@@ -54,7 +54,7 @@ export const updateContact = async (req, res, next) => {
 
   try {
     const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
-    if (!result) {
+    if (result === null) {
       throw HttpError(404, "Contact not found");
     }
     res.json(result);
@@ -67,7 +67,8 @@ export const updateFavoriteContact = async (req, res, next) => {
   const { id } = req.params;
   try {
     const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
-    if (!result) throw HttpError(404, "Contact not found");
+    if (result === null) throw HttpError(404, "Contact not found");
+
     res.status(200).send(result);
   } catch (error) {
     next(error);

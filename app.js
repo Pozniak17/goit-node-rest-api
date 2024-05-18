@@ -1,19 +1,19 @@
-import "dotenv/config";
 import express from "express";
-import morgan from "morgan";
-import cors from "cors";
+// import morgan from 'morgan';
+// import cors from 'cors';
+// import 'dotenv/config';
 import "./db.js";
-import contactsRouter from "./routes/contactsRouter.js";
+import routes from "./routes/index.js";
 
 const PORT = 3000;
 
 const app = express();
 
-app.use(morgan("tiny"));
-app.use(cors());
-app.use(express.json());
+// app.use(morgan('tiny'));
+// app.use(cors());
+// app.use(express.json());
 
-app.use("/api/contacts", contactsRouter);
+app.use("/api", routes);
 
 // Handle 404 Error
 app.use((_, res) => {
