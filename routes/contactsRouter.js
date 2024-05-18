@@ -1,20 +1,19 @@
 import express from "express";
-// import isValidId from "../controllers/middlewares/isValidId.js";
 import {
   getAllContacts,
   getOneContact,
   deleteContact,
   createContact,
   updateContact,
-  updateStatusContact,
+  updateFavoriteContact,
 } from "../controllers/contactsControllers.js";
 import validateBody from "../helpers/validateBody.js";
+
 import {
   createContactSchema,
-  updateFavoriteSchema,
+  updateContactSchema,
+  updateFavoriteContactSchema,
 } from "../schemas/contactsSchemas.js";
-
-//! тут всі маршрути, що стосуються книг
 
 const contactsRouter = express.Router();
 
@@ -26,12 +25,12 @@ contactsRouter.delete("/:id", deleteContact);
 
 contactsRouter.post("/", validateBody(createContactSchema), createContact);
 
-contactsRouter.put("/:id", validateBody(createContactSchema), updateContact);
+contactsRouter.put("/:id", validateBody(updateContactSchema), updateContact);
 
 contactsRouter.patch(
   "/:id/favorite",
-  validateBody(updateFavoriteSchema),
-  updateStatusContact
+  validateBody(updateFavoriteContactSchema),
+  updateFavoriteContact
 );
 
 export default contactsRouter;
