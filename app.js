@@ -5,8 +5,6 @@ import express from "express";
 import "./db.js";
 import routes from "./routes/index.js";
 
-const PORT = 3000;
-
 const app = express();
 
 // app.use(morgan('tiny'));
@@ -26,6 +24,8 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log(`Server is running. Use our API on port: ${PORT}`);
+  console.log(`Server started on port: ${PORT}`);
 });
