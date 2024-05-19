@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import User from "../models/users.js";
+import { token } from "morgan";
 
 async function register(req, res, next) {
   const { name, email, password } = req.body;
@@ -50,7 +51,7 @@ async function login(req, res, next) {
         .send({ message: "Email or password is incorrect" });
     }
 
-    res.send("Login");
+    res.send({ token: "TOKEN" });
   } catch (error) {
     next(error);
   }
