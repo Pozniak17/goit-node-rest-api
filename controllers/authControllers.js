@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../models/users.js";
 import { token } from "morgan";
+import jwt from "jsonwebtoken";
 
 async function register(req, res, next) {
   const { name, email, password } = req.body;
@@ -51,7 +52,13 @@ async function login(req, res, next) {
         .send({ message: "Email or password is incorrect" });
     }
 
-    res.send({ token: "TOKEN" });
+    const token = jwt.sign(
+      { id: user._id, name: user.name },
+      process.env.JWT_SECRET,
+      { expiresIn: 60 * 60 }
+    );
+
+    res.send({ token });
   } catch (error) {
     next(error);
   }
