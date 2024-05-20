@@ -42,14 +42,20 @@ export const deleteContact = async (req, res, next) => {
   }
 };
 
-export const createContact = async (req, res, next) => {
+export async function createContact(req, res, next) {
   try {
-    const result = await Contact.create(req.body);
-    res.status(201).json(result);
+    const contact = {
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      owner: req.user.id,
+    };
+    const newContact = await Contact.create(contact);
+    res.status(201).json(newContact);
   } catch (error) {
     next(error);
   }
-};
+}
 
 export const updateContact = async (req, res, next) => {
   const { id } = req.params;
