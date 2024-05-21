@@ -1,9 +1,10 @@
 import jwt, { decode } from "jsonwebtoken";
 
+import User from "../models/users.js";
+
 function auth(req, res, next) {
   const authorizationHeader = req.headers.authorization;
-
-  console.log(authorizationHeader);
+  console.log({ authorizationHeader });
 
   if (typeof authorizationHeader === "undefined") {
     return res.status(401).send({ message: "Invalid token" });
@@ -17,19 +18,33 @@ function auth(req, res, next) {
     return res.status(401).send({ message: "Invalid token" });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decode) => {
     if (err) {
       return res.status(401).send({ message: "Invalid token" });
     }
 
-    console.log({ decode });
+    try {
+      const user = await User.findById(decode.id);
 
-    req.user = {
-      id: decode.id,
-      name: decode.name,
-    };
+      if (user === null) {
+        return res.status(401).send({ message: "Invalid token" });
+      }
 
-    next();
+      if (user.token !== token) {
+        return res.status(401).send({ message: "Invalid token" });
+      }
+
+      console.log({ decode });
+
+      req.user = {
+        id: user._id,
+        name: user.name,
+      };
+
+      next();
+    } catch (error) {
+      next(error);
+    }
   });
 }
 
