@@ -1,107 +1,99 @@
-import User from "../models/users.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import Contact from "../models/contact.js";
+import HttpError from "../helpers/HttpError.js";
 
-async function register(req, res, next) {
-  const { name, email, password } = req.body;
-
-  const emailInLowerCase = email.toLowerCase();
-
+export const getAllContacts = async (req, res, next) => {
+  console.log({ user: req.user });
   try {
-    const user = await User.findOne({ email: emailInLowerCase });
+    const favorite = req.query.favorite;
 
-    if (user !== null) {
-      return res.status(409).send({ message: "User already registered" });
-    }
-
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    await User.create({
-      name,
-      email: emailInLowerCase,
-      password: passwordHash,
+    const contacts = await Contact.find({
+      owner: req.user.id,
+      favorite: favorite,
     });
-
-    res.status(201).send({ message: "Registration successfully" });
+    res.send(contacts);
   } catch (error) {
     next(error);
   }
-}
+};
 
-async function login(req, res, next) {
-  const { email, password } = req.body;
+export const getOneContact = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const contact = await Contact.findOne({ _id: id, owner: req.user.id });
 
-  const emailInLowerCase = email.toLowerCase();
+    if (contact === null) {
+      throw HttpError(404, "Contact not found");
+    }
+
+    res.send(contact);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteContact = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const result = await Contact.findByIdAndDelete({
+      _id: id,
+      owner: req.user.id,
+    });
+
+    if (result === null) {
+      throw HttpError(404, "Contact not found");
+    }
+
+    res.send({ id });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createContact = async (req, res, next) => {
+  try {
+    const { name, email, phone } = req.body;
+    const contact = {
+      name,
+      email,
+      phone,
+      owner: req.user.id,
+    };
+
+    const result = await Contact.create(contact);
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateContact = async (req, res, next) => {
+  const { id } = req.params;
 
   try {
-    const user = await User.findOne({ email: emailInLowerCase });
+    const result = await Contact.findByIdAndUpdate(
+      { _id: id, owner: req.user.id },
+      req.body,
+      { new: true }
+    );
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
-    if (user == null) {
-      console.log("Email");
-      return res.status(401).send({ message: "Email or password is wrong" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (isMatch === false) {
-      console.log("Password");
-      return res.status(401).send({ message: "Email or password is wrong" });
-    }
-
-    const token = jwt.sign(
-      { id: user._id, name: user.name },
-      process.env.JWT_SECRET,
-      { expiresIn: "2 days" }
+export const updateFavoriteContact = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const result = await Contact.findByIdAndUpdate(
+      { _id: id, owner: req.user.id },
+      req.body,
+      { new: true }
     );
 
-    await User.findByIdAndUpdate(user._id, { token });
+    if (result === null) throw HttpError(404, "Contact not found");
 
-    res.send({ token });
+    res.status(200).send(result);
   } catch (error) {
     next(error);
   }
-}
-
-async function logout(req, res, next) {
-  try {
-    await User.findByIdAndUpdate(req.user.id, { token: null });
-    res.status(204).end();
-    console.log("logout");
-  } catch (error) {
-    next(error);
-  }
-}
-
-async function current(req, res, next) {
-  try {
-    const user = await User.findById(req.user.id);
-    res.status(200).json({
-      email: user.email,
-      subscription: user.subscription,
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-
-async function updSubscription(req, res, next) {
-  try {
-    const user = await User.findByIdAndUpdate(req.user.id, req.body, {
-      new: true,
-    });
-    res.status(200).json({
-      email: user.email,
-      subscription: user.subscription,
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-
-export default {
-  register,
-  login,
-  logout,
-  current,
-  updSubscription,
 };

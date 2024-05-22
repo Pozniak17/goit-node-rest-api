@@ -39,6 +39,7 @@ function auth(req, res, next) {
       req.user = {
         id: user._id,
         name: user.name,
+        subscription: user.subscription,
       };
 
       next();
