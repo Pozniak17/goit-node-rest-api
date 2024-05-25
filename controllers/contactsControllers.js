@@ -76,7 +76,7 @@ export const updateContact = async (req, res, next) => {
       { new: true }
     );
 
-    if (full === null) throw HttpError(404, "Contact not found");
+    if (result === null) throw HttpError(404, "Contact not found");
     res.json(result);
   } catch (error) {
     next(error);

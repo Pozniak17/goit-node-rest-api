@@ -16,16 +16,16 @@ export const register = async (req, res, next) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    await User.create({
-      name,
+    const newUser = await User.create({
+      name: name,
       email: emailInLowerCase,
       password: passwordHash,
     });
 
     res.status(201).json({
       user: {
-        email: user.email,
-        subscription: user.subscription,
+        email: newUser.email,
+        subscription: newUser.subscription,
       },
     });
   } catch (error) {

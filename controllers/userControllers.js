@@ -1,7 +1,5 @@
-async function uploadAvatar(req, res, next) {
-  res.send("Upload avatar");
-}
+import User from "../models/users.js";
 
-export default {
-  uploadAvatar,
+export const uploadAvatar = async (req, res, next) => {
+  res.send("Upload avatar");
 };
