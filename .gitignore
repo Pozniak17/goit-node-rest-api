@@ -1,3 +1,10 @@
+tmp/*
+!tmp/.gitkeep
+public/avatars/*
+!public/avatars/.gitkeep
+
 node_modules/
 .env
-.env.local
+.idea
+.vscode
+.DS_Store

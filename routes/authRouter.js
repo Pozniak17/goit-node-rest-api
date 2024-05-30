@@ -8,7 +8,7 @@ import {
 } from "../controllers/authControllers.js";
 import { authSchema } from "../schemas/users.js";
 import validateBody from "../helpers/validateBody.js";
-import authMiddleware from "../middleware/auth.js";
+import authMiddleware from "../helpers/auth.js";
 
 const router = express.Router();
 const jsonParser = express.json();
