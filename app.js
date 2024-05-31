@@ -1,13 +1,10 @@
 import "dotenv/config";
-import sgMail from "@sendgrid/mail";
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import "./db.js";
 import routes from "./routes/index.js";
 import path from "node:path";
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const message = {
   to: "jekamanu@gmail.com",
@@ -17,8 +14,7 @@ const message = {
   text: `Node.js is awesome platform! `,
 };
 
-sgMail.send(message).then(console.log).catch(console.error);
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
