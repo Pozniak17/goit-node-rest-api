@@ -1,6 +1,5 @@
-import crypto from "node:crypto";
-
 import User from "../models/users.js";
+import crypto from "node:crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
@@ -19,23 +18,24 @@ export const register = async (req, res, next) => {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const verifyToken = crypto.randomUUID();
+    const verificationToken = crypto.randomUUID();
 
     const avatar = gravatar.url(email);
 
     const newUser = await User.create({
-      name,
+      name: name,
       email: emailInLowerCase,
       password: passwordHash,
       avatar,
+      verificationToken,
     });
 
     mail.sendMail({
       to: emailInLowerCase,
       from: "jekamanu@gmail.com",
-      subject: "Welcome to Contact List",
-      html: `To confirm your email please go to the <a href="http://localhost:3000/api/user/verify">link</a>`,
-      text: "To confirm your email please go to the link",
+      subject: "Welcome to Contact List!",
+      html: `To confirm your email please follow the <a href="http://localhost:3000/api/users/verify/${verificationToken}">link</a>`,
+      text: `To confirm your email please open the link http://localhost:3000/api/users/verify/${verificationToken}`,
     });
 
     res.status(201).json({
@@ -67,6 +67,10 @@ export const login = async (req, res, next) => {
     if (isMatch === false) {
       console.log("Password");
       return res.status(401).send({ message: "Email or password is wrong" });
+    }
+
+    if (user.verify === false) {
+      return res.status(401).send({ message: "Please verify your email" });
     }
 
     const token = jwt.sign(

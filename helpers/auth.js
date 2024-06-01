@@ -1,5 +1,4 @@
 import jwt, { decode } from "jsonwebtoken";
-
 import User from "../models/users.js";
 
 function auth(req, res, next) {

@@ -1,4 +1,5 @@
-import "dotenv/config";
+// import 'dotenv/config';
+// import sgMail from '@sendgrid/mail';
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
@@ -6,15 +7,18 @@ import "./db.js";
 import routes from "./routes/index.js";
 import path from "node:path";
 
-const message = {
-  to: "jekamanu@gmail.com",
-  from: "jekamanu@gmail.com",
-  subject: "Hello from Node.js",
-  html: `<h1 style="color: red">Node.js is awesome platform!</h1>`,
-  text: `Node.js is awesome platform! `,
-};
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const PORT = process.env.PORT || 3000;
+// const message = {
+// 	to: 'nzyame@gmail.com',
+// 	from: 'nzyame@gmail.com',
+// 	subject: 'Hello from Node.js',
+// 	html: `<h1 style="color: red">Node.js is awesome platform!</h1>`,
+// 	text: `Node.js is awesome platform!`,
+// };
+
+// sgMail.send(message).then(console.log).catch(console.error);
+const PORT = 3000;
 
 const app = express();
 
