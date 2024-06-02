@@ -2,7 +2,7 @@ import * as fs from "node:fs/promises";
 import path from "node:path";
 import HttpError from "../helpers/HttpError.js";
 import Jimp from "jimp";
-import mail from "../mail.js";
+import { sendVerifEmail } from "../mail.js";
 
 import User from "../models/users.js";
 
@@ -98,12 +98,8 @@ export const resendVerification = async (req, res, next) => {
       throw HttpError(400, "Verification has already been passed");
     }
 
-    const verifyEmail = {
-      to: emailInLowerCase,
-      subject: "Verify Email",
-      html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${user.verificationToken}">Click to verify</a>`,
-    };
-    await mail.sendMail(verifyEmail);
+    await sendVerifEmail(emailInLowerCase, user.verificationToken);
+
     res.json({
       message: "Verification email sent",
     });

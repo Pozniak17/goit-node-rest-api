@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
-import mail from "../mail.js";
+import { sendVerifEmail } from "../mail.js";
 
 export const register = async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -30,13 +30,7 @@ export const register = async (req, res, next) => {
       verificationToken,
     });
 
-    mail.sendMail({
-      to: emailInLowerCase,
-      from: "jekamanu@gmail.com",
-      subject: "Welcome to Contact List!",
-      html: `To confirm your email please follow the <a href="http://localhost:3000/api/users/verify/${verificationToken}">link</a>`,
-      text: `To confirm your email please open the link http://localhost:3000/api/users/verify/${verificationToken}`,
-    });
+    await sendVerifEmail(emailInLowerCase, verificationToken);
 
     res.status(201).json({
       user: {
